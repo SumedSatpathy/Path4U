@@ -1,0 +1,8 @@
+node_modules/
+dist/
+premium-audit.json
+.openai/.local/
+*.log
+.env
+.env.*
+!.env.example

@@ -1,0 +1,104 @@
+.approval-dialog {
+  width: min(36rem, calc(100% - 2rem));
+}
+
+.approval-body {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.approval-dates {
+  align-items: center;
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+}
+
+.approval-date {
+  align-self: stretch;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.7rem 0.85rem;
+}
+
+.approval-date span, .approval-diff-label, .approval-simulation {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.approval-date time {
+  font-family: var(--display);
+  font-size: clamp(0.98rem, 3.7vw, 1.25rem);
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.approval-date-old { background: color-mix(in srgb, var(--warning) 6%, var(--surface)); }
+.approval-date-new { background: color-mix(in srgb, var(--secondary) 8%, var(--surface)); }
+.approval-date-arrow { color: var(--muted); }
+
+.approval-source {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 0.8rem;
+}
+
+.approval-source-title {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.84rem;
+  gap: 0.45rem;
+}
+
+.approval-source-title svg { color: var(--secondary); }
+.approval-source-title span { color: var(--muted); font-size: 0.7rem; margin-inline-start: auto; }
+.approval-source p { color: var(--muted); font-size: 0.74rem; margin: 0.3rem 0 0.65rem; }
+.approval-diff { display: grid; gap: 0.3rem; }
+.approval-diff > div { border-radius: 0.35rem; display: flex; flex-wrap: wrap; gap: 0.2rem 0.6rem; padding: 0.38rem 0.55rem; }
+.approval-diff-label { flex: 0 0 3rem; }
+.approval-diff del, .approval-diff ins { font-family: var(--mono); font-size: 0.73rem; }
+.approval-removed { background: color-mix(in srgb, var(--warning) 10%, transparent); }
+.approval-added { background: color-mix(in srgb, var(--success) 12%, transparent); }
+
+.approval-context {
+  align-items: start;
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  padding: 0.65rem 0.75rem;
+}
+
+.approval-context > svg { color: var(--muted); margin-top: 0.13rem; }
+.approval-context strong { display: block; font-size: 0.86rem; }
+.approval-context p { color: var(--muted); font-size: 0.79rem; margin: 0.2rem 0 0; }
+.approval-proposal { background: color-mix(in srgb, var(--primary) 7%, var(--surface)); }
+.approval-proposal > svg { color: var(--primary); }
+.approval-result { background: color-mix(in srgb, var(--success) 9%, var(--surface)); }
+.approval-result > svg { color: var(--success); }
+.approval-simulation { display: inline-block; margin-inline-start: 0.25rem; }
+.approval-error { color: var(--warning); font-size: 0.8rem; margin: 0; }
+
+.approval-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: end;
+  margin-top: 1rem;
+}
+
+@media (max-width: 430px) {
+  .approval-dialog { width: calc(100% - 1rem); }
+  .approval-dates { gap: 0.35rem; }
+  .approval-date { padding: 0.55rem; }
+  .approval-date-arrow { width: 0.85rem; }
+}
