@@ -1,0 +1,35 @@
+1
+00:00:00,350 --> 00:00:06,096
+Meet Path for You, a career and learning workspace that helps you turn a goal into a practical next step.
+
+2
+00:00:07,150 --> 00:00:16,331
+Enter the guest workspace and discover opportunities. Review the original source, requirements and deadline before saving anything that fits your interests.
+
+3
+00:00:17,383 --> 00:00:25,134
+Ask a non-sensitive learning question. Path for You sends it through the server to Gemini, then presents an answer you can review.
+
+4
+00:00:26,217 --> 00:00:37,531
+Choose cybersecurity, your starting level, weekly study time and duration. Generate a structured roadmap with learning phases, practical projects and completion criteria.
+
+5
+00:00:38,583 --> 00:00:48,105
+Save the roadmap explicitly, then open its flowchart view. Both views use the same plan, so switching views needs no extra AI generation.
+
+6
+00:00:49,183 --> 00:00:58,044
+Create a cybersecurity mind map with Gemini. Edit the suggested branches, add connections and save the map when it reflects your learning goals.
+
+7
+00:00:59,117 --> 00:01:11,135
+Resume Studio can review fictional sample text locally. Its explained quality score highlights observable gaps. It does not predict hiring success or guarantee ATS acceptance.
+
+8
+00:01:12,217 --> 00:01:22,379
+Use the draft library to save and edit your preparation notes. Application materials stay under your control, and submissions use the organizer’s authorized channel.
+
+9
+00:01:23,450 --> 00:01:34,231
+Guest sessions share four AI interactions across tools each day. Access renews at eight in the morning Malaysia time, while shared capacity and Google limits still apply.

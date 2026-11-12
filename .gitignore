@@ -6,3 +6,13 @@ premium-audit.json
 .env
 .env.*
 !.env.example
+.vercel
+
+# Local tooling, captures and render caches are not website source.
+brag-output/
+.hyperframes/
+*.wav
+*.webm
+
+# Include the requested editable narration assets in the documented video.
+!docs/video/composition/assets/*.wav

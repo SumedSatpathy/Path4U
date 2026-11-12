@@ -1,0 +1,45 @@
+.openpath-dashboard { display:grid; grid-template-columns:minmax(0,1fr); gap:1rem; }
+.dash-hero,.dash-section-head { display:flex; justify-content:space-between; align-items:end; gap:.8rem; }
+.dash-hero { padding:1rem 0; }
+.dash-hero h1 { margin:.3rem 0; }
+.dash-hero p:last-child,.dash-listing p,.dash-news p,.dash-date-panel p { color:var(--muted); }
+.dash-stats { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:.6rem; }
+.dash-stat { display:grid; gap:.25rem; padding:.75rem .9rem; align-content:start; }
+.dash-stat strong { font:700 2rem/1 var(--display); color:var(--accent-ink); }
+.dash-stat span { font-size:.75rem; color:var(--muted); line-height:1.35; }
+.dash-panel,.dash-timeline { padding:clamp(.8rem,2vw,1.25rem); display:grid; align-content:start; gap:.65rem; }
+.dash-columns,.dash-calendar-layout { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:.85rem; }
+.dash-year,.dash-legend,.dash-listing-links { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; }
+.dash-months { display:flex; min-width:0; overflow:auto; gap:.3rem; padding:.22rem; }
+.dash-months button,.dash-calendar button { border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); min-height:2.55rem; }
+.dash-months button { flex:1 0 auto; padding:.35rem .6rem; }
+.dash-months button[aria-pressed="true"],.dash-calendar button[aria-pressed="true"] { background:var(--waypoint-wash); border-color:var(--primary); color:var(--accent-ink); font-weight:700; }
+.dash-calendar button:hover,.dash-months button:hover { border-color:var(--primary); }
+.dash-calendar { display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:.22rem; margin-top:.5rem; }
+.dash-calendar > span { font-size:.72rem; text-align:center; color:var(--muted); }
+.dash-calendar button { display:grid; justify-items:center; align-content:center; padding:.18rem; gap:.18rem; }
+.dash-calendar button[aria-current="date"] { border-color:var(--primary); box-shadow:inset 0 0 0 1px var(--primary); }
+.event-dots { display:flex; justify-content:center; flex-wrap:wrap; gap:.11rem; min-height:.35rem; }
+.event-dots i,.dash-legend i { width:.34rem; height:.34rem; border-radius:50%; }
+.dash-legend span { display:inline-flex; align-items:center; gap:.25rem; font-size:.75rem; }
+.dash-date-panel { padding:.8rem; border-radius:var(--radius); background:var(--background); border:1px solid var(--border); min-width:0; }
+.dash-date-preview,.dash-news { padding:.6rem 0; border-bottom:1px solid var(--border); }
+.dash-listing { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:.25rem; padding:.64rem 0; border-bottom:1px solid var(--border); }
+.dash-listing h3 { margin:.18rem 0; }
+.dash-listing p:not(.eyebrow),.dash-match { font-size:.8rem; }
+.dash-match { margin:.26rem 0; color:var(--muted); }
+.dash-listing-links { grid-column:1/-1; }
+.dash-task-list { display:grid; gap:.33rem; }
+.dash-task-list .text-link { white-space:normal; overflow-wrap:anywhere; }
+@media(max-width:1050px) { .dash-stats { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(max-width:680px) { .dash-columns,.dash-calendar-layout { grid-template-columns:minmax(0,1fr); } .dash-hero { align-items:start; flex-direction:column; } }
+@media(max-width:390px) { .dash-stat { padding:.58rem; } .dash-calendar button { min-height:2.35rem; } }
+.dash-roadmap { position: relative; isolation: isolate; overflow: hidden; align-content: center; }
+.dash-roadmap::before { content: ''; position: absolute; z-index: -1; width: 22rem; aspect-ratio: 1; right: -7rem; top: -10rem; border: 1px solid var(--border); border-radius: 50%; box-shadow: 0 0 0 2.25rem #88888814, 0 0 0 4.5rem #8888880d; }
+.dash-roadmap progress { width: min(100%,17rem); accent-color: var(--button-fill); }
+.dash-roadmap .text-link { margin-top: .45rem; justify-self: start; }
+.dash-deadline-summary { margin: 0; padding: 0; display: grid; list-style: none; }
+.dash-deadline-summary li { display: flex; justify-content: space-between; align-items: baseline; gap: .65rem; padding: .48rem 0; border-bottom: 1px solid var(--border); }
+.dash-deadline-summary a { font-weight: 600; }
+.dash-deadline-summary a:hover { text-decoration: underline; }
+.dash-deadline-summary time { flex: none; color: var(--muted); font-size: .75rem; }

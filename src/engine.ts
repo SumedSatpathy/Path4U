@@ -8,7 +8,6 @@ export interface Analysis {
 
 export interface ApplicationDraft { resume: string; cover: string; email: string; subject: string }
 
-const skillVocabulary = [...new Set(opportunities.flatMap(item => item.skills))]
 const skillAliases: Record<string, string[]> = { 'Machine Learning': ['machine learning', 'scikit-learn', 'tensorflow'], 'Data Visualization': ['data visualization', 'tableau', 'power bi'] }
 
 function normalize(value: string) {
@@ -26,7 +25,8 @@ function containsTerm(text: string, term: string) {
 
 export const sampleResume = 'Software engineering student based in Kuala Lumpur. Available for a six-month internship.\n\nBuilt a React and TypeScript campus events dashboard with keyboard navigation.\nDeveloped a Python and SQL reporting script for a student organization.\nUsed Git and Docker to collaborate and package a student project.'
 
-export function analyzeLocally(resume: string): Analysis {
+export function analyzeLocally(resume: string, catalog = opportunities): Analysis {
+  const skillVocabulary = [...new Set(catalog.flatMap(item => item.skills))]
   return {
     skills: skillVocabulary.filter(skill => (skillAliases[skill] ?? [skill]).some(term => containsTerm(resume, term))),
     evidence: resume.split(/\n|(?<=\.)\s/).map(line => line.trim()).filter(line => line.length > 24).slice(0, 5).map(line => line.slice(0, 240)),
@@ -34,9 +34,10 @@ export function analyzeLocally(resume: string): Analysis {
 }
 
 export function rankOpportunity(opportunity: Opportunity, candidate: Analysis, profile: Profile) {
-  const candidateVector = skillVocabulary.map(skill => Number(candidate.skills.some(candidateSkill => normalize(candidateSkill) === normalize(skill))))
-  const roleVector = skillVocabulary.map(skill => Number(opportunity.skills.includes(skill)))
-  const matched = opportunity.skills.filter(skill => candidateVector[skillVocabulary.indexOf(skill)] === 1)
+  const skillVocabulary = [...new Set([...opportunity.skills, ...candidate.skills].map(normalize))]
+  const candidateVector = skillVocabulary.map(skill => Number(candidate.skills.some(candidateSkill => normalize(candidateSkill) === skill)))
+  const roleVector = skillVocabulary.map(skill => Number(opportunity.skills.some(item => normalize(item) === skill)))
+  const matched = opportunity.skills.filter(skill => candidateVector[skillVocabulary.indexOf(normalize(skill))] === 1)
   const gaps = opportunity.skills.filter(skill => !matched.includes(skill))
   const dotProduct = candidateVector.reduce((total, value, index) => total + value * roleVector[index], 0)
   const magnitude = Math.sqrt(candidateVector.reduce((sum, value) => sum + value, 0) * roleVector.reduce((sum, value) => sum + value, 0))
@@ -53,13 +54,13 @@ export function buildLocalDraft(opportunity: Opportunity, analysis: Analysis, pr
   const { matched, gaps } = rankOpportunity(opportunity, analysis, profile)
   const evidence = analysis.evidence.find(line => matched.some(skill => containsTerm(line, skill)))
   const resume = [
-    'Emphasize these skills where your résumé already demonstrates them: ' + (matched.join(', ') || '[add relevant skills you can substantiate]') + '.',
+    'Emphasize these skills where your resume already demonstrates them: ' + (matched.join(', ') || '[add relevant skills you can substantiate]') + '.',
     'Place your strongest relevant project near the top. Describe the work, your contribution, and a result you can verify.',
     ...(evidence ? ['Candidate evidence to adapt: ' + evidence] : []),
     ...(gaps.length ? ['Review these requested skills: ' + gaps.join(', ') + '. Include them only if you have experience to support them.'] : []),
   ].join('\n\n')
   const contribution = matched.length
-    ? 'My résumé includes work with ' + matched.join(', ') + '. [Add a verified example of how you used these skills and what you delivered.]'
+    ? 'My resume includes work with ' + matched.join(', ') + '. [Add a verified example of how you used these skills and what you delivered.]'
     : '[Add a project or experience that shows why you’re a good fit.]'
   return {
     resume,

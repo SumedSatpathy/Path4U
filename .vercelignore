@@ -1,0 +1,12 @@
+.git
+.openai
+.env
+.env.*
+node_modules
+dist
+premium-audit.json
+
+.vercel
+
+brag-output/
+docs/video/

@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react'
 import { ArrowRight, BellRing, Bookmark, CalendarClock, Check, CheckCheck, CircleAlert, Clock3, FileSearch, GitCompareArrows, ListChecks, Pencil, Plus, Radar, ScanLine, Workflow } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
-import { deadlineChange, formatDate, opportunities, type CalendarResolution, type DeadlineChange, type Task } from './data'
+import { deadlineChange, formatDate, type CalendarResolution, type DeadlineChange, type Task } from './data'
 import { href } from './routes'
 import { EmptyState } from './ui'
 import { useWorkspace } from './workspace'
@@ -107,7 +107,7 @@ export function ProgressTimeline({ items }: { items: TimelineItem[] }) {
 }
 
 export function PathPage() {
-  const { state, setTask, addTask, editTask, openReview } = useWorkspace()
+  const { state, setTask, addTask, editTask, openReview, demo, catalog: opportunities } = useWorkspace()
   const plans = opportunities.filter(item => state.plans[item.id]).sort((a, b) => a.deadline.localeCompare(b.deadline))
   const saved = opportunities.filter(item => state.saved.includes(item.id))
   const tasks = plans.flatMap(item => state.plans[item.id])
@@ -117,8 +117,8 @@ export function PathPage() {
 
   return <div className="path-page">
     <div className="path-page-heading">
-      <div><p className="eyebrow"><Workflow size={14} aria-hidden="true" /> Your preparation workspace</p><h1>My Path</h1><p>Turn the opportunities you’ve saved into a plan you can follow.</p></div>
-      <a className="button button-secondary" href={href('/application')}>Application Studio <ArrowRight size={16} aria-hidden="true" /></a>
+      <div><p className="eyebrow"><Workflow size={14} aria-hidden="true" /> Your preparation workspace</p><h1>Preparation plans</h1><p>Turn the opportunities you’ve saved into a plan you can follow.</p></div>
+      <a className="button button-secondary" href={href('/application')}>Command Center <ArrowRight size={16} aria-hidden="true" /></a>
     </div>
 
     <section className="panel path-overview" aria-label="Preparation overview">
@@ -168,11 +168,11 @@ export function PathPage() {
           <div className="path-side-heading"><Clock3 size={17} aria-hidden="true" /><h2>Milestones</h2></div>
           <ProgressTimeline items={milestones} />
         </section>
-        <section className="panel path-side-panel path-reminder">
+        {demo && <section className="panel path-side-panel path-reminder">
           <div className="path-side-heading"><BellRing size={17} aria-hidden="true" /><h2>Deadline reminder</h2></div>
           <p>{calendar ? 'Demo Calendar reminder recorded for' : 'The Orbit Labs application deadline moved to'} <strong><time dateTime={deadlineChange.newDate}>{formatDate(deadlineChange.newDate, 'long')}</time></strong>.</p>
           <button type="button" className="button button-secondary" onClick={openReview}>{calendar ? 'View Calendar result' : 'Review deadline change'} <ArrowRight size={15} aria-hidden="true" /></button>
-        </section>
+        </section>}
         <section className="panel path-side-panel">
           <div className="path-side-heading"><CalendarClock size={17} aria-hidden="true" /><h2>Google Calendar</h2><span className="path-status" data-status="pending">Planned</span></div>
           <p className="muted">Calendar changes use a demo reminder in this browser.</p>

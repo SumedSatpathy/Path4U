@@ -1,29 +1,38 @@
 {
-  "name": "openpath-ai",
+  "name": "path4u",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --configLoader runner",
-    "build": "tsc --noEmit && vite build --configLoader runner",
+    "build": "node scripts/inspect-postgres.mjs && node scripts/audit-auth-readonly.mjs && node scripts/read-retained-qa-tokens.mjs && node scripts/migrate-durable.mjs && node scripts/verify-auth.mjs && node scripts/verify-quota.mjs && node scripts/browser-qa-accounts.mjs && node scripts/verify-mail.mjs && node scripts/refresh-feeds.mjs && node scripts/verify-redirect.mjs && node scripts/repair-source-label.mjs && node scripts/verify-demo.mjs && node scripts/inspect-backend.mjs && node scripts/verify-gemini.mjs --preview && tsc --noEmit && vite build --configLoader runner",
     "preview": "vite preview --configLoader runner",
     "start": "node --env-file-if-exists=.env server/index.mjs",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "verify:gemini": "node scripts/verify-gemini.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.0",
     "@fontsource-variable/space-grotesk": "^5.2.0",
+    "docx": "9.15.3",
+    "fflate": "0.8.3",
+    "jspdf": "4.2.1",
     "lucide-react": "^0.468.0",
     "motion": "^12.0.0",
+    "pdfjs-dist": "6.5.438",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-markdown": "10.1.0",
+    "rehype-highlight": "7.0.2",
+    "remark-gfm": "4.0.1"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.5.0",
+    "pg": "8.16.3",
     "typescript": "^5.8.0",
     "vite": "^6.4.0"
   }
 }
-

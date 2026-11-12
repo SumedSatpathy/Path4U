@@ -6,7 +6,7 @@
 
 .path-overview {
   align-items: center;
-  background: radial-gradient(ellipse at 16% 0%, color-mix(in srgb, var(--primary) 15%, transparent), transparent 70%), var(--surface);
+  background: var(--surface);
   display: grid;
   gap: 1.4rem;
   grid-template-columns: minmax(0, 2fr) minmax(0, 0.72fr) minmax(0, 0.92fr);
@@ -19,7 +19,7 @@
 .path-progress-heading strong { font-family: var(--mono); font-size: 0.9rem; margin-inline-start: auto; white-space: nowrap; }
 .path-progress-heading strong span { color: var(--muted); font-weight: 400; }
 .task-progress { background: var(--border); border-radius: 999px; height: 0.45rem; overflow: hidden; }
-.task-progress span { background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: inherit; display: block; height: 100%; }
+.task-progress span { background: var(--primary); border-radius: inherit; display: block; height: 100%; }
 .path-overview-stat { border-inline-start: 1px solid var(--border); display: grid; gap: 0.15rem; min-width: 0; padding-inline-start: 1.3rem; }
 .path-overview-stat strong { font-family: var(--display); font-size: 1.65rem; line-height: 1.05; }
 .path-overview-stat span { color: var(--muted); font-size: 0.78rem; }

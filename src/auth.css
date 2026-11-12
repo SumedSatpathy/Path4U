@@ -1,0 +1,51 @@
+.auth-layout { min-height: 100dvh; display: grid; grid-template-columns: minmax(17rem, .9fr) minmax(0, 1fr); align-items: stretch; padding: clamp(.6rem, 3vw, 2.5rem); gap: clamp(.8rem, 4vw, 3.8rem); max-width: 82rem; margin: auto; }
+.auth-brand { position: relative; isolation: isolate; overflow: hidden; display: grid; align-content: center; gap: 1.1rem; padding: clamp(1.2rem, 5vw, 4rem); background: radial-gradient(ellipse at 8% 15%, #575757, transparent 57%), radial-gradient(ellipse at 96% 91%, #474747, transparent 50%), #282828; color: #f9f9f9; border-radius: var(--panel-radius); }
+.auth-brand > p:last-of-type { color: #e5e5e5; max-width: 32ch; }
+.auth-orbit-ring { position: absolute; width: 24rem; aspect-ratio: 1; border-radius: 50%; border: 1px solid #d9d9d94d; inset: auto -9rem -9rem auto; z-index: -1; box-shadow: 0 0 0 2.5rem #d9d9d914, 0 0 0 5rem #d9d9d90d; animation: auth-drift 14s ease-in-out infinite alternate; }
+@keyframes auth-drift { to { transform: translate(-2rem,-1rem) scale(1.15); } }
+.auth-paper { align-self: center; width: min(100%, 37rem); padding: clamp(1.15rem, 4vw, 2.5rem); margin: 1rem auto; }
+.auth-form { display: grid; gap: .84rem; }
+.auth-form h1 { font-size: clamp(1.9rem, 4vw, 3rem); }
+.auth-form > p:not(.eyebrow,.field-error) { color: var(--muted); }
+.auth-links { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .7rem; }
+.auth-notice { padding: .7rem; border: 1px solid var(--border); border-radius: var(--radius); background: var(--route-wash); }
+.auth-terms { display: grid; gap: .26rem; }
+.auth-terms input { accent-color: var(--primary); }
+.auth-chips { display: flex; flex-wrap: wrap; gap: .48rem; }
+.auth-chips button[aria-pressed="true"] { background: var(--waypoint-wash); border-color: var(--primary); }
+.password-control, .dob-input { display: flex; align-items: center; border: 1px solid var(--border); border-radius: var(--radius); background: var(--background); }
+.password-control:focus-within, .dob-input:focus-within { border-color: var(--primary); }
+.field .password-control input, .dob-input input { flex: 1; min-width: 0; width: 100%; border: 0; border-radius: var(--radius); background: transparent; padding: .63rem .78rem; }
+.password-control .icon-button, .dob-input .icon-button { align-self: stretch; }
+.password-strength { margin-top: .35rem; color: var(--muted); }
+.password-strength > div { height: .25rem; background: var(--surface-raised); border-radius: 1rem; overflow: hidden; }
+.password-strength span { height: 100%; background: var(--primary); display: block; }
+.dob-field { display: grid; gap: .35rem; }
+.dob-field > label { font-weight: 560; }
+.dob-feedback { min-height: 1.35rem; font-size: .8rem; }
+.dob-success { color: var(--success); display: flex; align-items: center; gap: .38rem; }
+.dob-success svg { animation: birthday-success .18s ease-out; }
+@keyframes birthday-success { from { transform: scale(.72); opacity: 0; } }
+.birthday-dialog { max-width: 26rem; }
+.calendar-heading { display: grid; grid-template-columns: auto minmax(0,1fr) minmax(0,.72fr) auto; gap: .25rem; margin-bottom: .65rem; align-items: center; }
+.calendar-heading select { min-width: 0; }
+.calendar-days { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: .15rem; text-align: center; }
+.calendar-days > span { font-size: .72rem; color: var(--muted); }
+.calendar-days button { height: 2.35rem; padding: 0; border: 1px solid transparent; border-radius: var(--radius); background: var(--surface); }
+.calendar-days button:hover:not(:disabled) { border-color: var(--primary); }
+.calendar-days button[aria-pressed="true"] { background: var(--button-fill); color: white; }
+@media (max-width: 740px) {
+  .auth-layout { grid-template-columns: 1fr; gap: .45rem; }
+  .auth-brand { padding: 1.1rem; gap: .55rem; }
+  .auth-brand h2 { font-size: 1.85rem; }
+  .auth-orbit { display: none; }
+}
+.auth-location { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: .65rem; }
+.auth-search-choices { display: grid; gap: .7rem; }
+.auth-checkbox { display: flex; align-items: center; gap: .5rem; }
+.auth-brand .brand-mark-dark { display: none; }
+.auth-brand .brand-mark-light { display: inline-block; }
+.auth-brand .brand-wordmark { color: white; }
+.auth-brand h2 { font-size: clamp(2.7rem, 6vw, 5.4rem); }
+.auth-home { justify-self: start; }
+@media (max-width: 530px) { .auth-location { grid-template-columns: 1fr; } }

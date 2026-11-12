@@ -1,24 +1,20 @@
-import { useEffect, useId, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
+import { useId, useRef, useState, type FormEvent, type KeyboardEvent } from 'react'
 import { motion, useReducedMotion } from 'motion/react'
-import { ArrowLeft, ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, Check, ChevronLeft, ChevronRight, CircleAlert, Clock3, CodeXml, FileCheck2, FileText, GraduationCap, Layers3, ListChecks, MapPin, Presentation, Rocket, SearchX, SlidersHorizontal, Sparkles, X } from 'lucide-react'
-import { audiences, categories, deadlineChange, disciplines, formatDate, opportunities, workFormats, type Audience, type Category, type Discipline, type Opportunity, type WorkFormat } from './data'
-import { useIntegrationStatus } from './api'
+import { ArrowRight, ArrowUpRight, Bookmark, BriefcaseBusiness, CalendarDays, Check, ChevronLeft, ChevronRight, CircleAlert, Clock3, CodeXml, FileCheck2, FileText, ListChecks, MapPin, SearchX, SlidersHorizontal, Sparkles, X } from 'lucide-react'
+import { audiences, deadlineChange, disciplines, formatDate, workFormats, type Audience, type Discipline, type Opportunity, type WorkFormat } from './data'
 import { href, navigate } from './routes'
 import { Dialog, EmptyState, ErrorState, SearchBox } from './ui'
 import { useWorkspace } from './workspace'
 import './discover.css'
 
 const categoryTabs = [
-  { value: 'All', label: 'All opportunities', icon: Layers3 },
   { value: 'Internship', label: 'Internships', icon: BriefcaseBusiness },
-  { value: 'Hackathon', label: 'Hackathons', icon: CodeXml },
-  { value: 'Workshop', label: 'Workshops', icon: Presentation },
-  { value: 'Fellowship', label: 'Fellowships', icon: GraduationCap },
-  { value: 'Career program', label: 'Career programs', icon: Rocket },
+  { value: 'Hackathon', label: 'Hackathons & Workshops', icon: CodeXml },
+  { value: 'Job', label: 'Jobs', icon: BriefcaseBusiness },
 ] as const
 
-type CategoryTab = Category | 'All'
-type Sort = 'recommended' | 'deadline' | 'latest'
+type CategoryTab = 'Internship' | 'Hackathon' | 'Job'
+type Sort = 'verified' | 'deadline' | 'latest'
 type Duration = '4-6' | 'short'
 
 interface Filters {
@@ -28,17 +24,19 @@ interface Filters {
   audience: Audience | ''
   duration: Duration | ''
   saved: boolean
+  level: string
+  status: string
+  before: string
 }
 
-const locations = [...new Set(opportunities.map(item => item.location))].sort()
-const emptyFilters: Filters = { locations: [], disciplines: [], format: '', audience: '', duration: '', saved: false }
+const emptyFilters: Filters = { locations: [], disciplines: [], format: '', audience: '', duration: '', saved: false, level: '', status: '', before: '' }
 const pageSize = 6
 
 function choice<T extends string>(value: string | null, values: readonly T[]): T | undefined {
   return values.find(item => item === value)
 }
 
-function readFilters(params: URLSearchParams): Filters {
+function readFilters(params: URLSearchParams, locations: string[]): Filters {
   return {
     locations: locations.filter(item => params.getAll('location').includes(item)),
     disciplines: disciplines.filter(item => params.getAll('discipline').includes(item)),
@@ -46,17 +44,19 @@ function readFilters(params: URLSearchParams): Filters {
     audience: choice(params.get('audience'), audiences) ?? '',
     duration: choice(params.get('duration'), ['4-6', 'short']) ?? '',
     saved: params.get('saved') === '1',
+    level: params.get('level') ?? '', status: params.get('status') ?? '', before: params.get('before') ?? '',
   }
 }
 
 function writeFilters(params: URLSearchParams, filters: Filters) {
-  for (const key of ['location', 'discipline', 'format', 'audience', 'duration', 'saved']) params.delete(key)
+  for (const key of ['location', 'discipline', 'format', 'audience', 'duration', 'saved', 'level', 'status', 'before']) params.delete(key)
   filters.locations.forEach(value => params.append('location', value))
   filters.disciplines.forEach(value => params.append('discipline', value))
   if (filters.format) params.set('format', filters.format)
   if (filters.audience) params.set('audience', filters.audience)
   if (filters.duration) params.set('duration', filters.duration)
   if (filters.saved) params.set('saved', '1')
+  for(const key of ['level','status','before'] as const)if(filters[key])params.set(key,filters[key])
   params.delete('page')
 }
 
@@ -64,10 +64,14 @@ function toggleChoice<T>(values: T[], value: T) {
   return values.includes(value) ? values.filter(item => item !== value) : [...values, value]
 }
 
-function getResults(category: CategoryTab, query: string, filters: Filters, sort: Sort, saved: string[]) {
+function getResults(opportunities: Opportunity[], category: CategoryTab, query: string, filters: Filters, sort: Sort, saved: string[]) {
   const words = query.toLowerCase().trim().split(/\s+/).filter(Boolean)
   return opportunities.filter(item => {
-    if (category !== 'All' && item.category !== category) return false
+    if (category==='Hackathon' ? !['Hackathon','Workshop'].includes(item.category) : item.category!==category) return false
+    if(item.status==='Closed' || item.status==='Expired')return false
+    if(filters.level && item.experienceLevel!==filters.level)return false
+    if(filters.status && item.status!==filters.status)return false
+    if(filters.before && (!item.deadline || item.deadline.slice(0,10)>filters.before))return false
     if (filters.locations.length && !filters.locations.includes(item.location)) return false
     if (filters.disciplines.length && !filters.disciplines.includes(item.discipline)) return false
     if (filters.format && item.format !== filters.format) return false
@@ -78,22 +82,24 @@ function getResults(category: CategoryTab, query: string, filters: Filters, sort
     const text = [item.title, item.organization, item.category, item.discipline, item.location, item.format, item.summary, ...item.skills].join(' ').toLowerCase()
     return words.every(word => text.includes(word))
   }).sort((left, right) => {
-    if (sort === 'deadline') return left.deadline.localeCompare(right.deadline)
-    if (sort === 'latest') return right.published.localeCompare(left.published)
-    return right.match.score - left.match.score
+    if (sort === 'deadline') return (left.deadline || '9999').localeCompare(right.deadline || '9999')
+    if (sort === 'latest') return (right.discoveredAt || right.published).localeCompare(left.discoveredAt || left.published)
+    return Number(right.status==='Verified Open')-Number(left.status==='Verified Open') || (right.checkedAt || '').localeCompare(left.checkedAt || '')
   })
 }
 
 function durationLabel(duration: number) {
+  if(duration<0)return 'Duration not stated'
   return duration ? `${duration} ${duration === 1 ? 'month' : 'months'}` : 'Short event'
 }
 
 export function DeadlineBadge({ date, style = 'short' }: { date: string; style?: 'short' | 'long' }) {
+  if(!date)return <span className="opportunity-deadline">Deadline not stated</span>
   return <span className="opportunity-deadline"><CalendarDays size={15} aria-hidden="true" /><span>Due <time dateTime={date}>{formatDate(date, style)}</time></span></span>
 }
 
-export function SourceVerificationBadge() {
-  return <span className="opportunity-source-badge"><FileCheck2 size={14} aria-hidden="true" />Sample source</span>
+export function SourceVerificationBadge({opportunity}:{opportunity?: Opportunity}) {
+  return <span className="opportunity-source-badge" title={opportunity?.statusEvidence}><FileCheck2 size={14} aria-hidden="true" />{opportunity?.status ?? 'Status Unverified'}</span>
 }
 
 function OrganizationMark({ opportunity }: { opportunity: Opportunity }) {
@@ -132,8 +138,10 @@ export function OpportunityCard({ opportunity, saved, onToggleSave, compact, ret
     {!compact && <div className="opportunity-tags"><span>{opportunity.discipline}</span>{opportunity.skills.slice(0, 2).filter(skill => skill !== opportunity.discipline).map(skill => <span key={skill}>{skill}</span>)}</div>}
     <div className="opportunity-card-foot">
       <DeadlineBadge date={opportunity.deadline} />
-      <span className="opportunity-match-pill"><Sparkles size={13} aria-hidden="true" />{opportunity.match.score}% sample match</span>
+      <span className="opportunity-match-pill"><Sparkles size={13} aria-hidden="true" />{opportunity.status ?? 'Status Unverified'}</span>
     </div>
+    <div className="opportunity-live-source"><span>{opportunity.sourceName}</span>{opportunity.checkedAt && <small>{opportunity.verified?'Verified':'Checked'} {formatDate(opportunity.checkedAt)}{opportunity.cached?' · cached':''}</small>}</div>
+    <div className="opportunity-live-actions"><a className="button button-secondary" href={detailLink}>View Details</a><a className="button button-primary" href={opportunity.sourceUrl} target="_blank" rel="noopener noreferrer">{['Hackathon','Workshop'].includes(opportunity.category)?'Register':'Apply'} <ArrowUpRight size={15} /></a></div>
   </motion.article>
 }
 
@@ -167,7 +175,7 @@ export function CategoryTabs({ active, onChange, panelId }: { active: CategoryTa
   </div>
 }
 
-export function FilterPanel({ open, onClose, value, onChange, onApply }: {
+export function FilterPanel({locations,  open, onClose, value, onChange, onApply }: { locations: string[];
   open: boolean
   onClose: () => void
   value: Filters
@@ -208,6 +216,9 @@ export function FilterPanel({ open, onClose, value, onChange, onApply }: {
           <option value="">Any audience</option>{audiences.map(audience => <option key={audience}>{audience}</option>)}
         </select>
       </label>
+      <label className="discover-filter-select">Experience level<select className="field" value={value.level} onChange={e=>onChange({...value,level:e.target.value})}><option value="">Any level</option>{['Entry level','Internship','Associate','Mid-Senior Level','Senior','Not stated'].map(x=><option key={x}>{x}</option>)}</select></label>
+      <label className="discover-filter-select">Source status<select className="field" value={value.status} onChange={e=>onChange({...value,status:e.target.value})}><option value="">All current listings</option><option>Verified Open</option><option>Status Unverified</option></select></label>
+      <label className="discover-filter-select">Deadline on or before<input className="field" type="date" value={value.before} onChange={e=>onChange({...value,before:e.target.value})} /></label>
       <label className="discover-filter-check"><input type="checkbox" checked={value.saved} onChange={event => onChange({ ...value, saved: event.target.checked })} />Saved opportunities only</label>
       <div className="discover-filter-actions">
         <button className="button button-ghost" type="button" onClick={() => onChange(emptyFilters)}>Clear filters</button>
@@ -217,110 +228,31 @@ export function FilterPanel({ open, onClose, value, onChange, onApply }: {
   </Dialog>
 }
 
-interface ApprovedListing {
-  id: string
-  title: string
-  organization: string
-  location: string
-  sourceUrl: string
-}
-
-type FeedState = { status: 'idle' | 'loading' | 'error' } | { status: 'ready'; listings: ApprovedListing[] }
-
-function isApprovedListing(value: unknown): value is ApprovedListing {
-  if (!value || typeof value !== 'object') return false
-  const listing = value as Partial<ApprovedListing>
-  return typeof listing.id === 'string' && typeof listing.title === 'string' && typeof listing.organization === 'string'
-    && typeof listing.location === 'string' && typeof listing.sourceUrl === 'string'
-    && /^https:\/\/(?:boards|job-boards)\.greenhouse\.io\/[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}\/jobs\/\d+$/.test(listing.sourceUrl)
-}
-
-function ApprovedFeed() {
-  const { feed } = useIntegrationStatus()
-  const [result, setResult] = useState<FeedState>({ status: 'idle' })
-  const [query, setQuery] = useState('')
-  const [page, setPage] = useState(1)
-  const request = useRef<AbortController | null>(null)
-  useEffect(() => () => request.current?.abort(), [])
-
-  async function load() {
-    if (request.current) return
-    const controller = new AbortController()
-    request.current = controller
-    setResult({ status: 'loading' })
-    try {
-      const response = await fetch('api/opportunities', {
-        headers: { Accept: 'application/json' },
-        signal: AbortSignal.any([controller.signal, AbortSignal.timeout(10_000)]),
-      })
-      if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) throw new Error('Feed unavailable')
-      const data: { opportunities?: unknown } = await response.json()
-      if (!Array.isArray(data?.opportunities) || !data.opportunities.every(isApprovedListing)) throw new Error('Invalid feed response')
-      if (!controller.signal.aborted) {
-        setPage(1)
-        setResult({ status: 'ready', listings: data.opportunities })
-      }
-    } catch {
-      if (!controller.signal.aborted) setResult({ status: 'error' })
-    } finally {
-      request.current = null
-    }
-  }
-
-  const term = query.trim().toLowerCase()
-  const filtered = result.status === 'ready' ? result.listings.filter(item => [item.title, item.organization, item.location].join(' ').toLowerCase().includes(term)) : []
-  const limit = 8
-  const pages = Math.ceil(filtered.length / limit)
-
-  return <section className="panel discover-approved-feed" aria-labelledby="approved-feed-heading">
-    <header>
-      <span className="discover-feed-icon"><FileCheck2 size={21} aria-hidden="true" /></span>
-      <div><h2 id="approved-feed-heading">Approved employer feeds</h2><p>Published Greenhouse listings from explicitly approved boards.</p></div>
-      {feed ? <button className="button button-secondary" type="button" onClick={load} disabled={result.status === 'loading'}>
-        {result.status === 'ready' ? 'Refresh listings' : 'Load listings'}
-      </button> : <span className="discover-feed-badge">Setup required</span>}
-    </header>
-    {result.status === 'loading' && <p className="discover-feed-status" role="status">Checking approved Greenhouse boards…</p>}
-    {result.status === 'error' && <ErrorState title="Employer feeds couldn’t load" description="Check the connection or approved board configuration and try again." onRetry={load} />}
-    {result.status === 'ready' && (result.listings.length ? <div className="discover-feed-results">
-      <SearchBox value={query} onChange={value => { setQuery(value); setPage(1) }} label="Search approved listings" placeholder="Search approved listings by title, organizer, or location" />
-      <p className="discover-feed-status" role="status">{filtered.length} {filtered.length === 1 ? 'listing' : 'listings'} from approved feeds</p>
-      {filtered.length ? <ul className="discover-feed-list">{filtered.slice((page - 1) * limit, page * limit).map(item => <li key={item.id}>
-        <div><strong>{item.title}</strong><p>{item.organization}{item.location && ` · ${item.location}`}</p></div>
-        <a className="button button-secondary" href={item.sourceUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${item.title} on Greenhouse (opens in a new tab)`}>View listing <ArrowUpRight size={16} aria-hidden="true" /></a>
-      </li>)}</ul> : <EmptyState icon={<SearchX size={20} />} title="No matching approved listings" description="Search a different title, organizer, or location." />}
-      {pages > 1 && <nav className="discover-pagination" aria-label="Approved listing pages">
-        <span aria-live="polite">Page {page} of {pages}</span>
-        <div><button className="icon-button" type="button" aria-label="Previous approved listing page" disabled={page === 1} onClick={() => setPage(page - 1)}><ChevronLeft size={17} aria-hidden="true" /></button>
-          <button className="icon-button" type="button" aria-label="Next approved listing page" disabled={page === pages} onClick={() => setPage(page + 1)}><ChevronRight size={17} aria-hidden="true" /></button></div>
-      </nav>}
-    </div> : <p className="discover-feed-status" role="status">The approved boards returned no listings.</p>)}
-  </section>
-}
-
 export function DiscoverPage({ params }: { params: URLSearchParams }) {
-  const { state, toggleSaved } = useWorkspace()
+  const { state, toggleSaved, catalog, catalogLoading, catalogError, catalogSources, refreshCatalog } = useWorkspace()
   const [filterOpen, setFilterOpen] = useState(false)
   const [filterDraft, setFilterDraft] = useState<Filters>(emptyFilters)
   const panelId = useId()
   const resultsRef = useRef<HTMLDivElement>(null)
   const filterTriggerRef = useRef<HTMLButtonElement>(null)
   const query = params.get('q') ?? ''
-  const category = choice(params.get('category'), categories) ?? 'All'
-  const filters = readFilters(params)
-  const sort: Sort = choice(params.get('sort'), ['recommended', 'deadline', 'latest']) ?? 'recommended'
-  const results = getResults(category, query, filters, sort, state.saved)
+  const category: CategoryTab = params.get('category')==='Job'?'Job':['Hackathon','Workshop'].includes(params.get('category') ?? '')?'Hackathon':'Internship'
+  const locations = [...new Set(catalog.map(item => item.location))].sort()
+  const filters = readFilters(params, locations)
+  const sort: Sort = choice(params.get('sort'), ['verified', 'deadline', 'latest']) ?? 'latest'
+  const results = getResults(catalog, category, query, filters, sort, state.saved)
   const pageCount = Math.max(1, Math.ceil(results.length / pageSize))
   const requestedPage = Number(params.get('page') || 1)
   const page = Number.isSafeInteger(requestedPage) ? Math.max(1, Math.min(requestedPage, pageCount)) : 1
   const start = (page - 1) * pageSize
   const chips = [
+    ...(['level','status','before'] as const).filter(key=>filters[key]).map(key=>({label:filters[key],remove:{[key]:''}})),
     ...filters.locations.map(location => ({ label: location, remove: { locations: filters.locations.filter(item => item !== location) } })),
     ...filters.disciplines.map(discipline => ({ label: discipline, remove: { disciplines: filters.disciplines.filter(item => item !== discipline) } })),
     ...(filters.duration ? [{ label: filters.duration === '4-6' ? '4–6 months' : 'Short event', remove: { duration: '' } as const }] : []),
     ...(filters.format ? [{ label: filters.format, remove: { format: '' } as const }] : []),
     ...(filters.audience ? [{ label: filters.audience, remove: { audience: '' } as const }] : []),
-    ...(filters.saved ? [{ label: 'Saved only', remove: { saved: false } }] : []),
+    ...(filters.saved ? [{ label: 'Saved only', remove: { saved: false, level: '', status: '', before: '' } }] : []),
   ]
 
   function update(key: string, value: string, replace = false) {
@@ -357,8 +289,8 @@ export function DiscoverPage({ params }: { params: URLSearchParams }) {
     <header className="discover-page-heading">
       <p className="eyebrow"><span className="discover-route-dot" aria-hidden="true" /> Opportunity catalog</p>
       <h1>Discover opportunities</h1>
-      <p>Find internships, events, and career programs that fit your next step.</p>
-      <span className="discover-demo-label"><span aria-hidden="true" />Fictional demo listings</span>
+      <p>Explore employer-published roles and source-backed events. Check the organizer’s page before applying.</p>
+      <span className="discover-demo-label"><span aria-hidden="true" />{catalogLoading?'Checking live sources…':'Live source-backed listings'}</span>
     </header>
     <div className="discover-search-row">
       <SearchBox value={query} onChange={value => update('q', value, true)} label="Search opportunity catalog" placeholder="Search by role, skill, or organizer" />
@@ -366,7 +298,7 @@ export function DiscoverPage({ params }: { params: URLSearchParams }) {
         <SlidersHorizontal size={17} aria-hidden="true" /> Filters {chips.length > 0 && <span className="discover-filter-count">{chips.length}</span>}
       </button>
     </div>
-    <CategoryTabs active={category} panelId={panelId} onChange={value => update('category', value === 'All' ? '' : value)} />
+    <CategoryTabs active={category} panelId={panelId} onChange={value => update('category', value)} />
     <div ref={resultsRef} className="discover-results" role="tabpanel" tabIndex={0} id={panelId}
       aria-labelledby={`${panelId}-tab-${categoryTabs.findIndex(item => item.value === category)}`}>
       {chips.length > 0 && <div className="discover-active-filters" aria-label="Active filters">
@@ -375,16 +307,18 @@ export function DiscoverPage({ params }: { params: URLSearchParams }) {
       </div>}
       <div className="discover-results-bar">
         <p aria-live="polite"><strong>{results.length}</strong> {results.length === 1 ? 'opportunity' : 'opportunities'}</p>
-        <label>Sort by <select className="field discover-sort" value={sort} onChange={event => update('sort', event.target.value === 'recommended' ? '' : event.target.value)}>
-          <option value="recommended">Best match</option><option value="deadline">Deadline soonest</option><option value="latest">Recently added</option>
+        <label>Sort by <select className="field discover-sort" value={sort} onChange={event => update('sort', event.target.value)}>
+          <option value="latest">Recently discovered</option><option value="verified">Recently verified</option><option value="deadline">Deadline soon</option>
         </select></label>
       </div>
+      {catalogError && <ErrorState title="Live sources unavailable" description="Cached listings remain below where available. No sample opportunities have been substituted." onRetry={refreshCatalog} />}
+      {catalogLoading && <p role="status">Checking opportunity sources…</p>}
       {results.length ? <div className="discover-card-grid">
         {results.slice(start, start + pageSize).map((opportunity, index) => <OpportunityCard key={opportunity.id} opportunity={opportunity}
           saved={state.saved.includes(opportunity.id)} onToggleSave={() => {
             if (toggleSaved(opportunity.id) && filters.saved) resultsRef.current?.focus({ preventScroll: true })
           }} returnTo={params} order={index} />)}
-      </div> : <EmptyState icon={<SearchX size={24} />} title="No matching opportunities" description="Try a different search term or clear filters to see more of the demo catalog."
+      </div> : <EmptyState icon={<SearchX size={24} />} title={catalogLoading?"Checking sources":"No verified opportunities found for these filters"} description="Try another location or category. Event publication does not confirm that registration is open."
         action={<button className="button button-secondary" type="button" onClick={() => {
           navigate('/discover')
           resultsRef.current?.focus({ preventScroll: true })
@@ -393,14 +327,14 @@ export function DiscoverPage({ params }: { params: URLSearchParams }) {
         <span aria-live="polite">Showing {start + 1}–{Math.min(start + pageSize, results.length)} of {results.length}</span>
         <div>
           <button className="icon-button" type="button" aria-label="Previous page" disabled={page === 1} onClick={() => changePage(page - 1)}><ChevronLeft size={17} aria-hidden="true" /></button>
-          {Array.from({ length: pageCount }, (_, index) => index + 1).map(value => <button key={value} className="icon-button" type="button" aria-label={`Page ${value}`}
+          {Array.from({ length: Math.min(3,pageCount) }, (_, index) => Math.max(1,Math.min(page-1,pageCount-2))+index).map(value => <button key={value} className="icon-button" type="button" aria-label={`Page ${value}`}
             aria-current={page === value ? 'page' : undefined} onClick={() => changePage(value)}>{value}</button>)}
           <button className="icon-button" type="button" aria-label="Next page" disabled={page === pageCount} onClick={() => changePage(page + 1)}><ChevronRight size={17} aria-hidden="true" /></button>
         </div>
       </nav>}
     </div>
-    <ApprovedFeed />
-    <FilterPanel open={filterOpen} onClose={() => setFilterOpen(false)} value={filterDraft} onChange={setFilterDraft} onApply={applyFilters} />
+    <section className="panel discover-source-summary" aria-label="Opportunity sources"><h2>Source checks</h2><p>Refresh checks run on demand every 6 hours. If a provider fails, its last successful results remain visible with a cached label. Checks older than 24 hours lose Verified Open status.</p><ul>{catalogSources.map(source=><li key={source.name}><strong>{source.name}</strong> · {source.count} listings · {source.error?'Refresh unavailable':source.stale?'Cached results':'Source checked'}{source.checkedAt && <time dateTime={source.checkedAt}> · {new Date(source.checkedAt).toLocaleString()}</time>}<small> · {source.storage}</small></li>)}</ul><button className="button button-secondary" disabled={catalogLoading} onClick={refreshCatalog}>Check for updates</button></section>
+    <FilterPanel locations={locations} open={filterOpen} onClose={() => setFilterOpen(false)} value={filterDraft} onChange={setFilterDraft} onApply={applyFilters} />
   </div>
 }
 
@@ -420,22 +354,22 @@ export function MatchExplanation({ opportunity }: { opportunity: Opportunity }) 
 }
 
 export function OpportunityDetailPage({ id, params }: { id: string; params?: URLSearchParams }) {
-  const { state, toggleSaved, createPlan, openReview } = useWorkspace()
-  const opportunity = opportunities.find(item => item.id === id)
+  const { state, toggleSaved, createPlan, openReview, catalog, demo } = useWorkspace()
+  const opportunity = catalog.find(item => item.id === id)
   const catalogLink = href('/discover', new URLSearchParams(params?.get('from') ?? ''))
-  if (!opportunity) return <EmptyState title="Opportunity unavailable" description="The link does not match a listing in the demo catalog."
-    action={<a className="button button-secondary" href={catalogLink}><ArrowLeft size={16} aria-hidden="true" />Back to Discover</a>} />
+  if (!opportunity) return <EmptyState title="Opportunity unavailable" description="The link does not match an available listing."
+    action={<a className="button button-secondary" href={catalogLink}>Open catalog</a>} />
 
   const saved = state.saved.includes(id)
   const hasPlan = Object.hasOwn(state.plans, id)
-  const hasDeadlineChange = deadlineChange.opportunityId === id
+  const hasDeadlineChange = demo && deadlineChange.opportunityId === id
 
   return <div className="opportunity-detail">
-    <nav className="opportunity-breadcrumb" aria-label="Breadcrumb"><a href={catalogLink}><ArrowLeft size={16} aria-hidden="true" /> Discover</a><ChevronRight size={14} aria-hidden="true" /><span aria-current="page">Opportunity detail</span></nav>
+    <nav className="opportunity-breadcrumb" aria-label="Breadcrumb"><a href={catalogLink}>Discover</a><ChevronRight size={14} aria-hidden="true" /><span aria-current="page">Opportunity detail</span></nav>
     <header className="panel opportunity-detail-hero">
       <div className="opportunity-detail-hero-top">
         <OrganizationMark opportunity={opportunity} />
-        <span className="opportunity-category">{opportunity.category}</span><SourceVerificationBadge />
+        <span className="opportunity-category">{opportunity.category}</span>{<SourceVerificationBadge opportunity={opportunity} />}
         <button className="button button-secondary opportunity-detail-save" type="button" aria-label={`Save ${opportunity.title}`} aria-pressed={saved} onClick={() => toggleSaved(id)}>
           <Bookmark size={16} fill={saved ? 'currentColor' : 'none'} aria-hidden="true" />{saved ? 'Saved' : 'Save'}
         </button>
@@ -457,12 +391,12 @@ export function OpportunityDetailPage({ id, params }: { id: string; params?: URL
     <div className="opportunity-detail-columns">
       <div className="opportunity-detail-stack">
         <section className="panel opportunity-detail-panel"><h2>About the opportunity</h2><p>{opportunity.description}</p>
-          <h3>Required skills</h3><div className="opportunity-tags">{opportunity.skills.map(skill => <span key={skill}>{skill}</span>)}</div>
+          <h3>Skills stated in the listing</h3>{!opportunity.skills.length && <p>Read the original listing for skill requirements.</p>}<div className="opportunity-tags">{opportunity.skills.map(skill => <span key={skill}>{skill}</span>)}</div>
         </section>
-        <section className="panel opportunity-detail-panel"><h2>Eligibility</h2><p>{opportunity.organization} lists these eligibility criteria in the sample posting.</p>
+        <section className="panel opportunity-detail-panel"><h2>Eligibility</h2><p>{opportunity.eligibility.length?`${opportunity.organization} lists these criteria.`:"Eligibility has not been extracted. Confirm it on the original listing."}</p>
           <ul className="opportunity-detail-list">{opportunity.eligibility.map(item => <li key={item}>{item}</li>)}</ul>
         </section>
-        <section className="panel opportunity-detail-panel"><h2>Application requirements</h2>
+        <section className="panel opportunity-detail-panel"><h2>Application requirements</h2>{!opportunity.requirements.length && <p>Check the original application page for requirements.</p>}
           <ul className="opportunity-detail-list">{opportunity.requirements.map(item => <li key={item}>{item}</li>)}</ul>
           <a className="button button-secondary opportunity-draft-link" href={href('/application', new URLSearchParams({ opportunity: id }))}><FileText size={17} aria-hidden="true" />Prepare application draft</a>
         </section>
@@ -470,15 +404,15 @@ export function OpportunityDetailPage({ id, params }: { id: string; params?: URL
       <aside className="opportunity-detail-stack" aria-label="Preparation and source">
         <section className="panel opportunity-detail-panel opportunity-plan-panel">
           <div className="opportunity-panel-label"><ListChecks size={18} aria-hidden="true" /><h2>Preparation plan</h2></div>
-          <p>Break the sample requirements into steps you can track in My Path.</p>
+          <p>Break the requirements into steps you can track in Preparation Plans.</p>
           {hasPlan ? <a className="button button-primary" href={href('/path')}>View preparation plan <ArrowRight size={16} aria-hidden="true" /></a>
             : <button className="button button-primary" type="button" onClick={() => { if (createPlan(id)) navigate('/path') }}>Create preparation plan <ArrowRight size={16} aria-hidden="true" /></button>}
         </section>
-        <MatchExplanation opportunity={opportunity} />
+
         <section className="panel opportunity-detail-panel opportunity-source-panel">
           <div className="opportunity-panel-label"><FileCheck2 size={17} aria-hidden="true" /><h2>Listing source</h2></div>
-          <p>{opportunity.sourceName}</p>
-          <a href={opportunity.sourceUrl}>Open sample source <ArrowUpRight size={16} aria-hidden="true" /></a>
+          <p>{opportunity.sourceName}</p><p>{opportunity.statusEvidence}</p>{opportunity.checkedAt && <p>Last checked: <time dateTime={opportunity.checkedAt}>{new Date(opportunity.checkedAt).toLocaleString()}</time></p>}{opportunity.eventStart && <p>Event: {formatDate(opportunity.eventStart,'long')}{opportunity.eventEnd?` – ${formatDate(opportunity.eventEnd,'long')}`:''}{opportunity.eventTimezone?` (${opportunity.eventTimezone})`:''}</p>}{opportunity.fees && <p>Fees: {opportunity.fees}</p>}{opportunity.employmentType && <p>{opportunity.employmentType} · {opportunity.experienceLevel}</p>}
+          {opportunity.sourceUrl && <a href={opportunity.sourceUrl} target="_blank" rel="noopener noreferrer">Open original listing <ArrowUpRight size={16} aria-hidden="true" /></a>}
         </section>
       </aside>
     </div>

@@ -1,0 +1,11 @@
+* text=auto
+*.mjs text eol=lf
+*.tsx text eol=lf
+*.ts text eol=lf
+*.md text eol=lf
+*.mp4 binary
+*.wav binary
+*.mp3 binary
+*.png binary
+*.jpg binary
+*.woff2 binary

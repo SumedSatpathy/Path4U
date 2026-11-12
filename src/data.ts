@@ -1,7 +1,7 @@
-export const categories = ['Internship', 'Hackathon', 'Workshop', 'Fellowship', 'Career program'] as const
-export const workFormats = ['Remote', 'Hybrid', 'In person'] as const
-export const audiences = ['Students', 'Graduates', 'Open to all'] as const
-export const disciplines = ['Software', 'AI', 'Data Science', 'Product', 'Design'] as const
+export const categories = ['Internship', 'Hackathon', 'Workshop', 'Fellowship', 'Career program', 'Certification', 'Scholarship', 'Job'] as const
+export const workFormats = ['Remote', 'Hybrid', 'In person', 'Not stated'] as const
+export const audiences = ['Students', 'Graduates', 'Open to all', 'Not stated'] as const
+export const disciplines = ['Software', 'AI', 'Data Science', 'Product', 'Design', 'Other'] as const
 
 export type Category = typeof categories[number]
 export type WorkFormat = typeof workFormats[number]
@@ -20,6 +20,21 @@ export interface Opportunity {
   audience: Audience
   discipline: Discipline
   durationMonths: number
+  status?: 'Verified Open' | 'Status Unverified' | 'Closed' | 'Expired'
+  discoveredAt?: string
+  checkedAt?: string
+  sourceId?: string
+  sourceRecordUrl?: string
+  sourceVerifiedAt?: string
+  statusEvidence?: string
+  cached?: boolean
+  eventStart?: string
+  eventEnd?: string
+  eventTimezone?: string
+  fees?: string
+  employmentType?: string
+  experienceLevel?: string
+  verified?: boolean
   deadline: string
   published: string
   summary: string
@@ -84,7 +99,7 @@ export const opportunities: Opportunity[] = [
     summary: 'Ship a real product feature alongside a small, cross-functional engineering team.',
     description: 'Join a six-month product engineering team in Kuala Lumpur. Work with a mentor on a customer-facing React feature, from scoping and accessibility through release.',
     skills: ['React', 'TypeScript', 'Git'],
-    requirements: ['One-page résumé', 'A portfolio or GitHub link', 'A short note about a feature you built'],
+    requirements: ['One-page resume', 'A portfolio or GitHub link', 'A short note about a feature you built'],
     eligibility: ['Currently enrolled in a degree or diploma', 'Available for six months', 'Able to work hybrid in Kuala Lumpur'],
     score: 94, reasons: ['React and TypeScript align with the team stack.', 'Your sample profile lists Kuala Lumpur and six-month availability.'],
     gaps: ['Add a portfolio example that explains a product decision.'],
@@ -108,7 +123,7 @@ export const opportunities: Opportunity[] = [
     summary: 'Turn messy operational data into measurable insights with a research team.',
     description: 'Work on data preparation, experiment design, and reporting. Interns build a reproducible notebook and present their conclusions to the team.',
     skills: ['Python', 'SQL', 'Pandas'],
-    requirements: ['Résumé', 'A notebook or analysis sample', 'Availability dates'],
+    requirements: ['Resume', 'A notebook or analysis sample', 'Availability dates'],
     eligibility: ['Graduated within the past two years', 'Available for five months in Riyadh'],
     score: 83, reasons: ['Python and SQL match the role’s core tools.'],
     gaps: ['Graduate eligibility and in-person availability need review.'],
@@ -120,7 +135,7 @@ export const opportunities: Opportunity[] = [
     summary: 'Build evaluation tooling for retrieval and generative AI workflows.',
     description: 'Work on evaluation datasets, retrieval quality, and reproducible reporting with a four-month mentorship track.',
     skills: ['Python', 'Machine Learning', 'SQL'],
-    requirements: ['Résumé', 'A link to one technical project'],
+    requirements: ['Resume', 'A link to one technical project'],
     eligibility: ['Currently enrolled in a technical program', 'Available for four months'],
     score: 87, reasons: ['The sample profile includes Python and SQL.'],
     gaps: ['Show one machine learning or evaluation project.'],
@@ -144,7 +159,7 @@ export const opportunities: Opportunity[] = [
     summary: 'Investigate an urban data question and publish an open methods note.',
     description: 'The fictional fellowship pairs early-career analysts with research mentors on an applied city data project.',
     skills: ['SQL', 'Python', 'Data Visualization'],
-    requirements: ['Résumé', 'A brief research statement', 'One data sample'],
+    requirements: ['Resume', 'A brief research statement', 'One data sample'],
     eligibility: ['Recent graduates with an analytical background', 'Six-month commitment in Riyadh'],
     score: 78, reasons: ['SQL and Python carry over to the sample project.'],
     gaps: ['Explain the policy or urban question you would investigate.'],
@@ -156,7 +171,7 @@ export const opportunities: Opportunity[] = [
     summary: 'Build a small product case study with a cohort of early-career peers.',
     description: 'Follow a structured program on discovery, prioritization, and measurement. Practice presenting a product decision with clear evidence.',
     skills: ['Research', 'Prototyping', 'Communication'],
-    requirements: ['Résumé', 'One case study or an example of problem solving'],
+    requirements: ['Resume', 'One case study or an example of problem solving'],
     eligibility: ['Recent graduates', 'Available in Kuala Lumpur for four months'],
     score: 75, reasons: ['Prototyping experience transfers to the case study.'],
     gaps: ['Prepare an example of prioritizing competing user needs.'],
@@ -168,7 +183,7 @@ export const opportunities: Opportunity[] = [
     summary: 'Improve internal tooling and deployment reliability with a platform team.',
     description: 'Build developer tooling, improve one CI workflow, and document lessons learned in a final internal demo.',
     skills: ['Git', 'Docker', 'Linux'],
-    requirements: ['Résumé', 'A code sample or project walkthrough'],
+    requirements: ['Resume', 'A code sample or project walkthrough'],
     eligibility: ['Currently enrolled', 'Available for six months in Riyadh'],
     score: 76, reasons: ['Git experience is relevant to the team workflow.'],
     gaps: ['Demonstrate a container or Linux project.'],

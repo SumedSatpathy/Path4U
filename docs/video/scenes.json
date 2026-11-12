@@ -1,0 +1,74 @@
+[
+  {
+    "id": "intro",
+    "title": "Your future. Your path.",
+    "narration": "Meet Path for You, a career and learning workspace that helps you turn a goal into a practical next step.",
+    "voiceDuration": 5.696,
+    "start": 0,
+    "duration": 6.8
+  },
+  {
+    "id": "discover",
+    "title": "Discover and compare",
+    "narration": "Enter the guest workspace and discover opportunities. Review the original source, requirements and deadline before saving anything that fits your interests.",
+    "voiceDuration": 9.131,
+    "start": 6.8,
+    "duration": 10.233333333333333
+  },
+  {
+    "id": "assistant",
+    "title": "Ask Path4U AI",
+    "narration": "Ask a non-sensitive learning question. Path for You sends it through the server to Gemini, then presents an answer you can review.",
+    "voiceDuration": 7.701,
+    "start": 17.03333333333333,
+    "duration": 8.833333333333334
+  },
+  {
+    "id": "roadmap",
+    "title": "Build a learning roadmap",
+    "narration": "Choose cybersecurity, your starting level, weekly study time and duration. Generate a structured roadmap with learning phases, practical projects and completion criteria.",
+    "voiceDuration": 11.264,
+    "start": 25.866666666666667,
+    "duration": 12.366666666666667
+  },
+  {
+    "id": "flowchart",
+    "title": "Save and follow the path",
+    "narration": "Save the roadmap explicitly, then open its flowchart view. Both views use the same plan, so switching views needs no extra AI generation.",
+    "voiceDuration": 9.472,
+    "start": 38.233333333333334,
+    "duration": 10.6
+  },
+  {
+    "id": "mindmap",
+    "title": "Explore the branches",
+    "narration": "Create a cybersecurity mind map with Gemini. Edit the suggested branches, add connections and save the map when it reflects your learning goals.",
+    "voiceDuration": 8.811,
+    "start": 48.833333333333336,
+    "duration": 9.933333333333334
+  },
+  {
+    "id": "resume",
+    "title": "Keep resume work local",
+    "narration": "Resume Studio can review fictional sample text locally. Its explained quality score highlights observable gaps. It does not predict hiring success or guarantee ATS acceptance.",
+    "voiceDuration": 11.968,
+    "start": 58.766666666666666,
+    "duration": 13.1
+  },
+  {
+    "id": "drafts",
+    "title": "Review before you submit",
+    "narration": "Use the draft library to save and edit your preparation notes. Application materials stay under your control, and submissions use the organizer’s authorized channel.",
+    "voiceDuration": 10.112,
+    "start": 71.86666666666666,
+    "duration": 11.233333333333333
+  },
+  {
+    "id": "outro",
+    "title": "A fair daily AI allowance",
+    "narration": "Guest sessions share four AI interactions across tools each day. Access renews at eight in the morning Malaysia time, while shared capacity and Google limits still apply.",
+    "voiceDuration": 10.731,
+    "start": 83.1,
+    "duration": 11.833333333333334
+  }
+]

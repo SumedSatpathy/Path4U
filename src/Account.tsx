@@ -1,8 +1,9 @@
 import { useState, type FormEvent } from 'react'
-import { ArrowLeft, CalendarDays, Monitor, Moon, Sun, UserRound } from 'lucide-react'
+import { CalendarDays, Compass, UserRound } from 'lucide-react'
 import { deadlineChange, formatDate, opportunities } from './data'
-import { href } from './routes'
+import { href, useUnsavedChanges } from './routes'
 import { EmptyState } from './ui'
+import { apiPost, failureMessage } from './api'
 import { useWorkspace, type CandidateStage } from './workspace'
 
 export function ProfilePage() {
@@ -10,6 +11,7 @@ export function ProfilePage() {
   const [draft, setDraft] = useState(state.profile)
   const [error, setError] = useState(false)
   const dirty = JSON.stringify(draft) !== JSON.stringify(state.profile)
+  useUnsavedChanges(dirty)
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!draft.name.trim()) {
@@ -37,24 +39,28 @@ export function ProfilePage() {
 }
 
 export function SettingsPage() {
-  const { state, setTheme } = useWorkspace()
+  const { state, setTheme, demo, notify } = useWorkspace()
+  const [clearing, setClearing] = useState(false)
   return <div className="simple-page">
-    <header><p className="eyebrow">Account</p><h1>Settings</h1><p>Manage the appearance and review the connections for this workspace.</p></header>
-    <section className="panel simple-panel"><span className="section-icon"><Monitor size={19} /></span><h2>Appearance</h2><p>Your theme preference is saved in this browser.</p>
-      <div className="choice-row" role="group" aria-label="Theme">
-        <button type="button" className="button button-secondary" aria-pressed={state.theme === 'dark'} onClick={() => setTheme('dark')}><Moon size={17} /> Dark</button>
-        <button type="button" className="button button-secondary" aria-pressed={state.theme === 'light'} onClick={() => setTheme('light')}><Sun size={17} /> Light</button>
-      </div>
-    </section>
-    <section className="panel simple-panel"><span className="section-icon"><CalendarDays size={19} /></span><h2>Calendar</h2><p>Google Calendar is planned. Deadline reviews show a simulated update you can inspect from My Path.</p><a className="button button-secondary" href={href('/path')}>Open My Path</a></section>
+    <header><p className="eyebrow">Account</p><h1>Settings</h1><p>Review your workspace preferences and connections.</p></header>
+    {!demo && <section className="panel simple-panel"><h2>Assistant uploads</h2><p>Files are removed after processing. Clear any uploads left by a connection failure.</p><button type="button" className="button button-secondary" disabled={clearing} onClick={async () => {
+      setClearing(true)
+      try { const result = await apiPost<{ removed: number }>('assistant/clear-uploads', {}); notify(result.removed ? 'Remaining uploads removed.' : 'No remaining uploads.') }
+      catch (failure) { notify(failureMessage(failure), 'error') } finally { setClearing(false) }
+    }}>{clearing ? 'Clearing…' : 'Clear remaining uploads'}</button></section>}
+    {!demo && <section className="panel simple-panel"><h2>Public website</h2><a className="button button-secondary" href="/?view=public">View Public Website</a></section>}
+    <section className="panel simple-panel"><h2>Appearance</h2><label className="field">Color theme<select value={state.theme ?? 'dark'} onChange={event => setTheme(event.target.value as 'light' | 'dark')}><option value="light">Light</option><option value="dark">Dark</option></select></label></section>
+<section className="panel simple-panel"><span className="section-icon"><Compass size={19} /></span><h2>Workspace</h2><p>{demo ? 'Sample preferences are stored in this browser.' : 'Your settings, saved opportunities and plans are stored with your account.'}</p><a className="button button-secondary" href={href('/profile')}>Edit profile</a></section>
+    <section className="panel simple-panel"><span className="section-icon"><CalendarDays size={19} /></span><h2>Calendar</h2><p>Google Calendar is planned. Deadline reviews show a simulated update you can inspect from Preparation Plans.</p><a className="button button-secondary" href={href('/path')}>Open preparation plans</a></section>
   </div>
 }
 
 export function SourcePage({ id }: { id: string }) {
-  const opportunity = opportunities.find(item => item.id === id)
+  const { demo } = useWorkspace()
+  const opportunity = demo ? opportunities.find(item => item.id === id) : undefined
   if (!opportunity) return <EmptyState title="Source unavailable" description="This sample listing may have moved." action={<a className="button button-primary" href={href('/discover')}>Browse opportunities</a>} />
   return <div className="simple-page">
-    <a className="text-link" href={href('/opportunity/' + id)}><ArrowLeft size={17} /> Back to opportunity</a>
+    <a className="text-link" href={href('/opportunity/' + id)}>View opportunity</a>
     <header><p className="eyebrow">Fictional source record</p><h1>{opportunity.title}</h1><p>{opportunity.organization} · {opportunity.location}</p></header>
     <section className="panel simple-panel"><h2>{opportunity.sourceName}</h2><p>{opportunity.description}</p>
       <div className="source-excerpt">{id === deadlineChange.opportunityId ? deadlineChange.after : 'Application deadline · ' + formatDate(opportunity.deadline, 'long') + ' UTC'}</div>

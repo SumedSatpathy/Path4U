@@ -1,11 +1,14 @@
 import { useEffect, useId, useRef, type FormEvent, type ReactNode, type RefObject } from 'react'
 import { AlertCircle, Compass, Search, X } from 'lucide-react'
 import { href } from './routes'
+import { useAccount } from './session'
 
 export function Logo({ compact }: { compact?: boolean }) {
-  return <a className="brand" href={href('/')} aria-label="OpenPath AI home">
-    <img src={import.meta.env.BASE_URL + 'mark.svg'} width="34" height="34" alt="" />
-    {!compact && <span>OpenPath<span className="brand-ai"> AI</span></span>}
+  const { session } = useAccount()
+  return <a className="brand" href={href(session?.user ? '/dashboard' : '/')} aria-label="Path4U home">
+    <img className="brand-mark brand-mark-dark" src="/mark.svg" width="40" height="40" alt="" />
+    <img className="brand-mark brand-mark-light" src="/mark-inverse.svg" width="40" height="40" alt="" />
+    {!compact && <span className="brand-wordmark">Path4U</span>}
   </a>
 }
 
@@ -16,22 +19,25 @@ interface SearchBoxProps {
   label?: string
   onSubmit?: (value: string) => void
   className?: string
+  embedded?: boolean
 }
 
-export function SearchBox({ value, onChange, placeholder = 'Search opportunities', label = placeholder, onSubmit, className }: SearchBoxProps) {
+export function SearchBox({ value, onChange, placeholder = 'Search opportunities', label = placeholder, onSubmit, className, embedded = false }: SearchBoxProps) {
   const input = useRef<HTMLInputElement>(null)
   const composing = useRef(false)
   function submit(event: FormEvent) {
     event.preventDefault()
     if (!composing.current) onSubmit?.(value.trim())
   }
-  return <form className={'search-box ' + (className ?? '')} role="search" noValidate onSubmit={submit} aria-label={label}>
+  const control = <>
     {onSubmit ? <button className="search-submit" aria-label="Submit search" type="submit"><Search size={17} /></button> : <Search size={17} aria-hidden="true" />}
     <input ref={input} type="search" aria-label={label} value={value} placeholder={placeholder}
       onCompositionStart={() => { composing.current = true }} onCompositionEnd={() => { composing.current = false }}
-      onChange={event => onChange(event.target.value)} />
+      onKeyDown={event => { if (embedded && event.key === 'Enter') event.preventDefault() }} onChange={event => onChange(event.target.value)} />
     {value && <button className="search-clear" type="button" aria-label="Clear search" onClick={() => { onChange(''); input.current?.focus() }}><X size={16} /></button>}
-  </form>
+  </>
+  const classes = 'search-box ' + (className ?? '')
+  return embedded ? <div className={classes}>{control}</div> : <form className={classes} role="search" noValidate onSubmit={submit} aria-label={label}>{control}</form>
 }
 
 interface DialogProps {

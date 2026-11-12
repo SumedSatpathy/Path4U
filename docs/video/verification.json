@@ -1,0 +1,37 @@
+{
+  "duration": 94.933333,
+  "expectedDuration": 94.93333333333332,
+  "bytes": 5735494,
+  "streams": [
+    {
+      "codec_name": "h264",
+      "codec_type": "video",
+      "width": 1920,
+      "height": 1080,
+      "r_frame_rate": "30/1"
+    },
+    {
+      "codec_name": "aac",
+      "codec_type": "audio",
+      "r_frame_rate": "0/0"
+    }
+  ],
+  "chapters": 9,
+  "subtitleCues": 9,
+  "decodedFrames": [
+    3,
+    46,
+    69,
+    90
+  ],
+  "audioSummary": "Summary:\r\n\r\n  Integrated loudness:\r\n    I:         -19.3 LUFS\r\n    Threshold: -29.9 LUFS\r\n\r\n  Loudness range:\r\n    LRA:         3.0 LU\r\n    Threshold: -39.9 LUFS\r\n    LRA low:   -21.5 LUFS\r\n    LRA high:  -18.5 LUFS\r\n\r\n  True peak:\r\n    Peak:       -1.1 dBFS",
+  "voice": "Kokoro af_heart (synthetic)",
+  "checks": {
+    "lintErrors": 0,
+    "runtimeErrors": 0,
+    "layoutErrors": 0,
+    "contrastChecks": 20,
+    "contrastPassed": 20,
+    "audioErrors": 0
+  }
+}

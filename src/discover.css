@@ -199,7 +199,7 @@
 .opportunity-card:hover {
   border-color: color-mix(in srgb, var(--primary) 42%, var(--card-line));
   translate: 0 -2px;
-  box-shadow: 0 12px 30px -22px color-mix(in srgb, var(--primary) 55%, transparent);
+  box-shadow: 0 .4rem .8rem var(--shadow);
 }
 
 .opportunity-card-top,
@@ -227,9 +227,9 @@
 }
 
 .opportunity-mark-cyan { --mark-color: var(--secondary); }
-.opportunity-mark-amber { --mark-color: var(--warning, #e3a656); }
-.opportunity-mark-mint { --mark-color: var(--success, #58ca9b); }
-.opportunity-mark-pink { --mark-color: color-mix(in srgb, var(--primary) 50%, #e895c8); }
+.opportunity-mark-amber { --mark-color: var(--warning); }
+.opportunity-mark-mint { --mark-color: var(--success); }
+.opportunity-mark-pink { --mark-color: var(--secondary); }
 .opportunity-mark-blue { --mark-color: color-mix(in srgb, var(--primary) 42%, var(--secondary)); }
 
 .opportunity-category,
@@ -348,7 +348,7 @@
 .opportunity-breadcrumb { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; color: var(--muted); font-size: .82rem; }
 .opportunity-breadcrumb a { display: inline-flex; align-items: center; gap: .34rem; color: var(--ink); text-decoration: none; }
 .opportunity-breadcrumb a:hover { color: var(--catalog-brand); }
-.opportunity-detail-hero { padding: clamp(1.2rem, 3vw, 2rem); background: radial-gradient(ellipse at 92% 0%, color-mix(in srgb, var(--primary) 12%, transparent), transparent 62%), var(--surface); }
+.opportunity-detail-hero { padding: clamp(1.2rem, 3vw, 2rem); background: var(--surface); }
 .opportunity-detail-hero-top { margin-bottom: 1.15rem; }
 .opportunity-detail-hero-top .opportunity-mark { width: 3rem; height: 3rem; }
 .opportunity-detail-save { margin-inline-start: auto; }
@@ -358,15 +358,15 @@
 .opportunity-detail-facts > span { display: inline-flex; align-items: center; gap: .4rem; color: var(--muted); font-size: .84rem; }
 
 .opportunity-deadline-note {
-  --note-ink: color-mix(in srgb, var(--warning, #e3a656) 57%, var(--ink));
+  --note-ink: color-mix(in srgb, var(--warning) 57%, var(--ink));
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: .65rem;
   align-items: center;
   padding: .75rem .95rem;
-  border: 1px solid color-mix(in srgb, var(--warning, #e3a656) 42%, var(--catalog-line));
+  border: 1px solid color-mix(in srgb, var(--warning) 42%, var(--catalog-line));
   border-radius: .8rem;
-  background: color-mix(in srgb, var(--warning, #e3a656) 7%, var(--surface));
+  background: color-mix(in srgb, var(--warning) 7%, var(--surface));
   color: var(--note-ink);
 }
 
@@ -396,7 +396,7 @@
 .opportunity-match-panel > .opportunity-match-context { font-size: .75rem; margin-top: .42rem; }
 .opportunity-match-reasons { display: grid; gap: .48rem; list-style: none; padding: 0; margin: .8rem 0 0; color: var(--muted); font-size: .82rem; }
 .opportunity-match-reasons li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .37rem; }
-.opportunity-match-reasons svg { color: color-mix(in srgb, var(--success, #58ca9b) 60%, var(--ink)); }
+.opportunity-match-reasons svg { color: color-mix(in srgb, var(--success) 60%, var(--ink)); }
 .opportunity-match-gaps { border-top: 1px solid var(--catalog-line); margin-top: .75rem; padding-top: .65rem; }
 .opportunity-match-gaps ul { margin: .32rem 0 0; padding-left: 1.12rem; color: var(--muted); font-size: .82rem; }
 .opportunity-source-panel .opportunity-panel-label svg { color: var(--catalog-source); }
@@ -438,3 +438,8 @@
   .opportunity-card:hover { translate: none; }
   .app-dialog.discover-filter-dialog[open] { animation: none; }
 }
+.opportunity-live-source { display:grid; gap:.3rem; color:var(--muted); font-size:.78rem; overflow-wrap:anywhere; }
+.opportunity-live-actions { display:flex; flex-wrap:wrap; gap:.5rem; }
+.discover-source-summary { padding:1rem; display:grid; gap:.7rem; }
+.discover-source-summary ul { padding-left:1.2rem; display:grid; gap:.5rem; overflow-wrap:anywhere; }
+.discover-source-summary .button { justify-self:start; }
