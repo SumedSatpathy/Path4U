@@ -16,3 +16,11 @@ brag-output/
 
 # Include the requested editable narration assets in the documented video.
 !docs/video/composition/assets/*.wav
+
+# Common private editor/runtime outputs. Keep documented media and source tracked.
+*.tmp
+*.tsbuildinfo
+coverage/
+playwright-report/
+test-results/
+.DS_Store

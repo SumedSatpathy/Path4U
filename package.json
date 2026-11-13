@@ -5,12 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite --configLoader runner",
-    "build": "node scripts/inspect-postgres.mjs && node scripts/audit-auth-readonly.mjs && node scripts/read-retained-qa-tokens.mjs && node scripts/migrate-durable.mjs && node scripts/verify-auth.mjs && node scripts/verify-quota.mjs && node scripts/browser-qa-accounts.mjs && node scripts/verify-mail.mjs && node scripts/refresh-feeds.mjs && node scripts/verify-redirect.mjs && node scripts/repair-source-label.mjs && node scripts/verify-demo.mjs && node scripts/inspect-backend.mjs && node scripts/verify-gemini.mjs --preview && tsc --noEmit && vite build --configLoader runner",
+    "build": "tsc --noEmit && vite build --configLoader runner",
     "preview": "vite preview --configLoader runner",
     "start": "node --env-file-if-exists=.env server/index.mjs",
     "typecheck": "tsc --noEmit",
     "test": "node --test tests/*.test.mjs",
-    "verify:gemini": "node scripts/verify-gemini.mjs"
+    "verify:gemini": "node scripts/verify-gemini.mjs",
+    "ops:preview": "node scripts/preview-operations.mjs"
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.2.0",

@@ -1,148 +1,139 @@
-# Path4U
+<p align="center"><img src="public/mark.svg" alt="Path4U logo" width="84"></p>
+<h1 align="center">Path4U</h1>
+<p align="center"><strong>Your future. Your path.</strong></p>
+<p align="center">Path4U helps students find relevant opportunities, build practical learning plans, and prepare application drafts in one career workspace.</p>
+<p align="center"><a href="https://path4u.vercel.app">Live demo</a> · <a href="docs/video/path4u-workflow.mp4">Watch the 95-second walkthrough</a> · <a href="#local-installation">Run locally</a> · <a href="#website-screenshots">Screenshots</a> · <a href="docs/pitch/README.md">Pitch deck</a></p>
 
-**Your future. Your path.**
+<p align="center">
+<img alt="React 19" src="https://img.shields.io/badge/React-19-444444?labelColor=111111&amp;logo=react&amp;logoColor=white">
+<img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5.8-444444?labelColor=111111&amp;logo=typescript&amp;logoColor=white">
+<img alt="Vite 6" src="https://img.shields.io/badge/Vite-6-444444?labelColor=111111&amp;logo=vite&amp;logoColor=white">
+<img alt="Node.js" src="https://img.shields.io/badge/Node.js-API-444444?labelColor=111111&amp;logo=nodedotjs&amp;logoColor=white">
+<img alt="Gemini API" src="https://img.shields.io/badge/Gemini-API-444444?labelColor=111111">
+<img alt="Supabase" src="https://img.shields.io/badge/Supabase-Database-444444?labelColor=111111&amp;logo=supabase&amp;logoColor=white">
+<img alt="Vercel" src="https://img.shields.io/badge/Vercel-Hosting-444444?labelColor=111111&amp;logo=vercel&amp;logoColor=white">
+</p>
 
-Path4U helps students find relevant opportunities, build practical learning plans, and prepare application drafts in one career workspace.
+<p align="center"><a href="docs/video/path4u-workflow.mp4"><img src="docs/video/path4u-workflow.jpg" alt="Watch the Path4U walkthrough showing the guest career workspace" width="640"></a></p>
 
-[**Explore the demo**](https://path4u.vercel.app) · [**Watch the 95-second walkthrough**](docs/video/path4u-workflow.mp4) · [Run locally](#run-locally) · [Screenshots](#screenshots)
+## Hackathon version
 
-[![Watch the Path4U walkthrough showing the guest career workspace](docs/video/path4u-workflow.jpg)](docs/video/path4u-workflow.mp4)
+**Status: untagged review snapshot.** Package version: `1.0.0`. Published source baseline: [`f39d7be`](https://github.com/SumedSatpathy/Path4U/commit/f39d7be66b29d6b849a1cb02ea21945b17462c31), committed 13 November 2026. A formal submission date and approved release tag have not been supplied.
 
-The public hackathon release opens in guest mode. Sign In and Create Account are marked **Coming Soon**. Guest work uses temporary browser-tab storage. Export the material you want to keep.
+The public Production deployment predates this source commit. Later AI/quota improvements were tested on a protected Preview. The local documentation/build cleanup and pitch deck are pending review and are not a new deployed release.
 
-## From a goal to your next step
+## The problem
 
-Students move between opportunity listings, learning resources, and application documents. Path4U brings these tasks into one workspace.
+Students can struggle to choose a career direction, find relevant learning resources, discover suitable opportunities and present their skills clearly. These tasks often require switching between unrelated tools.
 
-1. **Discover an opportunity.** Search internships, jobs, hackathons, and workshops, then inspect the original source and available requirements.
-2. **Build a learning plan.** Choose a role or skill, starting level, weekly hours, and duration. Review milestones, projects, and learning resources.
-3. **Prepare your application.** Review a resume, edit application material, and keep notes before using the provider's official submission channel.
+## Our solution
 
-## Screenshots
+Path4U brings opportunity discovery, learning plans and application preparation into one workspace. Users review sources and generated guidance, decide what to save, and submit through an organizer's authorized channel.
 
-| Discover opportunities | Build a learning roadmap | Review a sample resume |
-| --- | --- | --- |
-| [![Path4U Discover screen with internship cards, search, filters, and original source labels](docs/video/composition/assets/screens/discover.png)](docs/video/composition/assets/screens/discover.png) | [![Path4U roadmap with beginner settings, weekly study hours, and cybersecurity milestones](docs/video/composition/assets/screens/roadmap.png)](docs/video/composition/assets/screens/roadmap.png) | [![Path4U local Resume Studio showing a fictional sample's rubric score and evidence categories](docs/video/composition/assets/screens/resume.png)](docs/video/composition/assets/screens/resume.png) |
+1. **Discover an opportunity.** Search internships, jobs, hackathons and workshops, then inspect the original source and available requirements.
+2. **Build a learning plan.** Choose a role or skill, starting level, weekly hours and duration. Review milestones, projects and learning resources.
+3. **Prepare your application.** Review a resume, edit application material and keep notes before using the provider's official submission channel.
 
-Select an image to view it at full size. Discovery and roadmap captures come from the reviewed Preview. Resume Studio shows a fictional sample processed locally. The video includes narration and English captions. [Capture notes and credits](docs/video/README.md)
+## Key features
 
-## What you can do
-
-| Tool | What it helps you do |
+| Capability | Current behavior |
 | --- | --- |
-| **Discover** | Filter opportunities and inspect original sources, requirements, and known deadlines. |
-| **Path4U AI** | Ask career and learning questions through the server-side Gemini integration. |
-| **Roadmaps and flowcharts** | Generate a structured plan, then display a saved roadmap as a flowchart without another generation. |
-| **Mind maps** | Explore a topic through Gemini-generated branches, then edit and save the map. |
-| **Resume Studio** | Review supported files on your device with an evidence-based rubric, improve wording, and export editable documents. |
-| **Preparation workspace** | Keep notes, application drafts, and progress together for your review. |
+| Opportunity discovery | Source-backed internships, hackathons/workshops and jobs with original links, filters and explicit unknown fields |
+| Learning roadmaps | Career goal, starting level, duration and study hours inform structured plans, milestones and resources |
+| Flowchart view | Reuses a saved roadmap without another generation request |
+| Path4U AI | Server-side Gemini guidance where the active deployment and quotas permit it; failures show an error |
+| Mind maps | Editable branches; genuine Gemini branch generation is a tested Preview improvement, while the earlier public build uses guided suggestions |
+| Resume Studio | Resume building, required-field validation, local quality evaluation and editable document exports |
+| Preparation work | Guest notes, drafts and progress remain under the user's control |
 
-The resume score describes document quality. Hiring outcomes and ATS acceptance depend on the employer and its process. Opportunity availability, eligibility, and submission requirements come from the original organizer. Automatic LinkedIn applications are outside the current workflow.
+The public hackathon is guest-first. Sign In and Create Account remain **Coming Soon**. The repository retains account code, but guest mode does not represent users as authenticated or expose private account data.
 
-## Architecture
+## Website screenshots
 
-```mermaid
-flowchart TD
-    UI["React student workspace"] --> API["Node API"]
-    UI --> LOCAL["Tab storage and local resume tools"]
-    API --> DATA["Supabase data and atomic quotas"]
-    API --> GEMINI["Gemini generation"]
-    API --> FEEDS["Public opportunity providers"]
-    FEEDS --> DATA
-```
+The Production captures below show the real interface on 13 November 2026. Resume content is the built-in fictional sample.
 
-AI requests pass a signed guest session, atomic application quota, and provider-call budget before reaching Gemini. Structured results are validated and returned for review. Saving generated work is an explicit action.
+### Welcome
+![Path4U public welcome screen](docs/screenshots/landing.jpg)
+
+### Guest dashboard
+![Path4U guest dashboard](docs/screenshots/dashboard.jpg)
+
+### Source-backed discovery
+![Actual opportunity cards with original-source and unknown-deadline labels](docs/screenshots/discover.jpg)
+
+### Learning roadmap
+![Actual Gemini roadmap result from the tested protected Preview](docs/screenshots/roadmap.jpg)
+*Roadmap capture from the tested protected Preview. It does not establish that Production contains the later quota repair.*
+
+### Resume quality review
+![Local explained resume quality evaluation using fictional sample text](docs/screenshots/resume-rater.jpg)
+*The quality rubric evaluates observable text signals. It does not predict hiring success or official ATS acceptance.*
+
+## Technology stack
 
 | Layer | Implementation |
 | --- | --- |
-| Frontend | React 19, TypeScript, Vite 6, internal history/hash routing |
-| Interface | Monochrome CSS, Lucide icons, Motion for React |
-| API | Node.js handlers in `server/`, exposed through `api/index.mjs` |
-| AI | Server-side Gemini REST adapter and validated learning results |
-| Data | Supabase PostgreSQL for durable application data, public caches, and atomic quotas |
-| Guest workspace | Browser-tab storage and local resume processing |
-| Hosting | Vercel frontend and Node serverless API |
+| Frontend | React 19, TypeScript, Vite 6 |
+| Interface | Existing monochrome CSS system, Lucide icons, Motion for React |
+| Routing | Custom internal browser-history/hash router |
+| Backend | Node.js handlers exposed through a Vercel Function |
+| AI | Server-side Gemini REST calls with structured output validation |
+| Durable data | Supabase PostgreSQL and a service-only atomic quota RPC |
+| Account implementation | Supabase Auth, eligibility/onboarding checks and owner-scoped records, retained behind guest-only mode |
+| Guest workspace | Separate tab-scoped session storage |
+| Hosting | Vercel frontend output plus `/api/*` routing |
 
-The account implementation is retained in the source with Supabase Auth, HttpOnly cookies, eligibility checks, and owner-isolated records. Account access is disabled in the public hackathon UI.
+## System architecture
 
-## Run locally
+```mermaid
+flowchart LR
+    U[User] --> W[Path4U React website]
+    W --> A[Vercel Node API]
+    W --> T[Guest tab storage]
+    A --> Q[Durable quota reservation]
+    Q --> S[(Supabase)]
+    Q --> G[Gemini API]
+    A --> D[Approved opportunity sources]
+    G --> A
+    D --> A
+    A --> W
+```
 
-Use **Node.js 22+** and **pnpm**.
+The server validates input and reserves app/provider capacity before a new live AI request. A separate Save action keeps a generated result in the guest workspace. Account data uses its existing authorization path.
+
+## Local installation
+
+Use Node.js 22+ and pnpm. Keep the committed lockfile.
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm build
-pnpm start
 ```
 
-Open [127.0.0.1:4173](http://127.0.0.1:4173).
+Copy `.env.example` to `.env` and keep `DEMO_ONLY_MODE=true` for the guest-first UI. Leave cloud credentials empty to use the explicitly guided local demo. Keys belong only in the server environment, never in a `VITE_` variable or public file.
 
-Local development without cloud credentials uses the guided implementation. Live Gemini generation and durable hosted quotas require the configuration below. `pnpm dev` serves the Vite frontend. API-dependent actions also require the Node server.
-
-For the guest UI, copy `.env.example` to `.env` and set `DEMO_ONLY_MODE=true`. Keep provider and Supabase credentials on the server and out of version control.
-
-<details>
-<summary><strong>Hosted configuration and database setup</strong></summary>
-
-The live guest implementation requires:
-
-```text
-DEMO_ONLY_MODE=true
-PATH4U_DATA_BACKEND=supabase
-PATH4U_DEMO_BACKEND=supabase
-PATH4U_PUBLIC_DEMO=1
-SUPABASE_URL=<server-side project URL>
-SUPABASE_ANON_KEY=<server-side legacy anon key>
-SUPABASE_SERVICE_ROLE_KEY=<server-side service-role key>
-GEMINI_API_KEY=<server-side Gemini key>
-GEMINI_MODEL=gemini-3.1-flash-lite
-OPENPATH_ORIGIN=<approved production HTTPS origin>
-PUBLIC_SITE_URL=<approved production HTTPS origin at build time>
-```
-
-Set each variable in the intended Vercel environment. Preview and Production settings can differ. The full repository must be deployed so `/api/*` runs; a purely static upload cannot generate AI results.
-
-Database schema changes are migrations under `supabase/migrations`. The existing shared project already has its repair applied. **Do not blindly replay historical migrations:** some install a project-wide Auth trigger. Audit the destination and apply only reviewed, pending migrations. The current quota repair reuses the existing atomic RPC and needs no new schema migration.
-
-Keep paid features disabled: `GEMINI_SEARCH_ENABLED=false`, `GEMINI_SEARCH_BILLING_APPROVED=false`, `GEMINI_IMAGE_BILLING_APPROVED=false`, `GEMINI_PRIVATE_DATA_APPROVED=false`. Do not enable billing to run this demo. Live Google Sheets/Gmail require separately configured owner-scoped credentials; Calendar writes and enterprise orchestration remain unconfigured. Course directory links work independently of paid search grounding.
-
-</details>
-
-<details>
-<summary><strong>AI allowance, reset times, and provider limits</strong></summary>
-
-The source quota repair gives each signed browser session **4 shared interactions per UTC day** across chat, roadmap generation, flowchart generation and mind maps. Daily allowance renews at **00:00 UTC / 08:00 Asia/Kuala_Lumpur**. A saved roadmap can switch between roadmap and flowchart views without consuming an interaction.
-
-Shared application admission remains **80 interactions per UTC day and 4 per fixed UTC minute**. Each provider attempt separately passes **400 calls per Pacific day, 10 per fixed UTC minute, and 200,000 estimated input tokens per fixed UTC minute**. Google's own project quota remains authoritative and can be lower. Failures after reservation still consume the admitted interaction. Safe public cache hits and successful request-ID replays do not start another provider call.
-
-There is no daily Wi-Fi session or generation cap. A broad anti-abuse throttle permits **120 new guest sessions per network per fixed ten-minute window**; existing valid sessions can continue. Cookies are signed, HttpOnly, SameSite=Lax, Secure on HTTPS, valid for 24 hours, and independent of network changes.
-
-See [AI_QUOTA_REVIEW.md](AI_QUOTA_REVIEW.md) for exact rules, affected paths, controlled reset tests, separate Gemini timing and deployment status. The existing public release is not automatically changed by a GitHub commit; the review identifies the tested Preview.
-
-</details>
-
-## Verification
+### Run and build
 
 ```sh
 pnpm typecheck
 pnpm test
 pnpm build
+pnpm start
 ```
 
-Controlled tests use isolated storage, provider doubles, and an injected clock. Live provider checks and Production verification are recorded separately.
+Open [http://127.0.0.1:4173](http://127.0.0.1:4173). This runs the built frontend with the Node API. `pnpm dev` provides the existing Vite frontend development server, and `pnpm preview` previews the static frontend build; those commands alone do not provide the full Node API.
 
-| Evidence | Where to look |
-| --- | --- |
-| Current source quota behavior and Preview checks | [AI quota review](AI_QUOTA_REVIEW.md) |
-| Published demo and its recorded limitations | [Production release record](DEMO_PRODUCTION_RELEASE.md) |
-| Walkthrough captures, subtitles, and attribution | [Video guide](docs/video/README.md) |
+The normal build is `tsc --noEmit && vite build --configLoader runner`. It performs no remote migration, mail test, account administration or provider verification. The preserved operator scripts are separate: `pnpm ops:preview --help`. Each operation requires its original opt-in flag and Preview environment. Database, account/password, mail and repair operations require the appropriate owner authorization; Preview can share Production storage.
 
-Preview and Production can run different versions. Check the release records when evaluating the public demo.
+Vercel still uses `pnpm build`, output directory `dist`, the existing `api/index.mjs` function and the existing API rewrites. No hosting setting changed for this cleanup.
+
+## Verification
+
+Run `pnpm typecheck`, `pnpm test` and `pnpm build`. Controlled quota tests use isolated storage, provider doubles and a test clock; they do not exhaust or reset a live provider quota.
 
 <details>
-<summary><strong>Browser verification commands</strong></summary>
+<summary>Browser verification commands</summary>
 
-Browser checks need an installed Playwright module and Chrome. Set `PATH4U_PLAYWRIGHT_MODULE` when Playwright is installed outside this project.
+Browser checks require Playwright and Chrome. Set `PATH4U_PLAYWRIGHT_MODULE` when Playwright is installed outside this project.
 
 ```sh
 node --test tests/browser-quota-reset.mjs
@@ -152,16 +143,58 @@ node tests/browser-upgrade.mjs
 node tests/browser-ai-privacy.mjs
 ```
 
-Administrative scripts have explicit opt-in guards. Use the normal verification commands with QA and migration flags unset.
+Keep QA and migration flags unset for routine verification.
 
 </details>
 
-<details>
-<summary><strong>Security and current integration limits</strong></summary>
+## Environment setup
 
-Never upload API keys, Supabase credentials, real resumes or private account records to a public repository or demo. Service-only quota tables are protected with RLS and service-role grants; admission is atomic across serverless instances. Storage failure blocks new provider calls. Server checks same-origin writes, validates input and prevents private free-tier AI processing.
+A live hosted guest backend uses `DEMO_ONLY_MODE=true`, `PATH4U_DATA_BACKEND=supabase`, `PATH4U_DEMO_BACKEND=supabase` and `PATH4U_PUBLIC_DEMO=1`, with server-only `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` and `GEMINI_API_KEY`. The default text model is `gemini-3.1-flash-lite`.
 
-Accounts, email delivery, private processing, OAuth, live Google writes and external provider availability must be verified in their intended environment before enabling them. The public hackathon does not advertise these as active. Age entry is self-declared eligibility, not identity verification. Opportunity availability and final submission requirements belong to the original organizer.
+Set `OPENPATH_ORIGIN` to the approved Production HTTPS origin and `PUBLIC_SITE_URL` to that origin at build time. Preview and Production variables can differ. Deploy the full API project; a static-only upload cannot generate live AI results.
 
-</details>
+Keep paid search/image flags and private free-tier resume processing disabled. Do not enable billing for this demo. Live Google writes require separately configured, authorized integrations.
 
+Preserve `supabase/migrations/`. The existing shared project already has its reviewed repair applied. Do not blindly replay historical migrations: some install project-wide Auth triggers. Schema changes require a destination audit and approval.
+
+## Demo limitations and known issues
+
+- Public account actions remain Coming Soon. Retained auth code does not mean public sign-in is enabled.
+- Guest work stays in this tab's session storage and may disappear when the tab closes. Export important work.
+- The repaired Preview shares **4 interactions per guest session per UTC day** across chat, roadmaps, flowcharts and mind maps. The app day resets at **00:00 UTC / 08:00 Malaysia**. Shared app/provider budgets still apply.
+- The earlier public Production build retains daily network caps and its one-roadmap sublimit. The Preview repair replaces those daily network gates with a broad short session-creation throttle.
+- Google's independent daily project quota resets at Pacific midnight, not at the app's Malaysia morning reset. Storage errors, missing credentials, unavailable models and exhausted limits can still block AI.
+- Unknown listing fields remain unknown, and organizers can change availability or deadlines.
+- Live Calendar writes, paid web grounding, enterprise orchestration and private free-tier resume AI processing are not active.
+- Large document/PDF export chunks produce a Vite size warning. The build succeeds; bundle optimization remains future work.
+
+### AI usage rules in the repaired Preview
+
+| Gate | Rule |
+| --- | --- |
+| Guest session | 4 accepted interactions per UTC day, shared across chat, roadmaps, flowcharts and mind maps |
+| Shared app capacity | 80 accepted interactions per UTC day and 4 per fixed UTC minute |
+| New-session throttle | 120 new sessions per network per fixed ten-minute window; existing valid sessions continue |
+| Provider safety budgets | 400 attempts per Pacific day, 10 per fixed UTC minute and 200,000 estimated input tokens per fixed UTC minute |
+| Retained account policy | 12 interactions and 2 roadmaps per eligible account per UTC day; public account access remains disabled |
+
+The app day resets at 00:00 UTC / 08:00 Malaysia. Open tabs refresh their server-reported balance at the boundary and on focus. Viewing a saved roadmap as a flowchart requires no new generation. Accepted failed requests still consume allowance; matching request-ID replays do not charge twice. The closed public-question cache can reuse answers without another provider call and excludes goals, private attachments and conversation history.
+
+Provider counters track actual attempts, including the single allowed retry after an upstream 503. Input accounting estimates ceil(UTF-8 request bytes / 2) + 512. Google's own project limits remain authoritative. Its daily quota resets at Pacific midnight, which is 16:00 Malaysia in standard time or 15:00 during daylight saving. Storage failures block new provider calls. Cookies are signed, HttpOnly, SameSite=Lax, Secure on HTTPS and limited to 24 hours. These are session safeguards, not identity verification.
+
+## Team SOUL
+
+- **Sumed Satpathy**
+- **Shayan Tanveer Khan**
+- **Syed Md Takiuddin Ali**
+
+## Future improvements
+
+Planned work includes enabling verified account access after its remaining provider checks, improving bundle size and accessibility coverage, and adding approved Calendar/Google integrations. These are future directions, not current public-demo claims.
+
+## Project materials
+
+- [Pitch deck and speaker notes](docs/pitch/README.md)
+- [Narrated workflow, captions and editable composition](docs/video/README.md)
+
+Path4U's candidate workflow took inspiration from AIHawk. The implementation, existing logo and UI are maintained in this repository. Dependencies retain their own licences, and the walkthrough includes credited CC BY music. There is currently no project-wide licence file; public visibility alone does not grant a licence. Do not infer an MIT licence for Path4U.
