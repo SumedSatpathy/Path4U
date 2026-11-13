@@ -20,7 +20,7 @@
 
 **Status: untagged review snapshot.** Package version: `1.0.0`. Published source baseline: [`f39d7be`](https://github.com/SumedSatpathy/Path4U/commit/f39d7be66b29d6b849a1cb02ea21945b17462c31), committed 13 November 2026. A formal submission date and approved release tag have not been supplied.
 
-The public Production deployment predates this source commit. Later AI/quota improvements were tested on a protected Preview. The local documentation/build cleanup and pitch deck are pending review and are not a new deployed release.
+The public Production deployment predates this source commit. Later AI/quota improvements were tested on a protected Preview. The documentation/build cleanup and pitch deck are included in this repository; they do not change the deployed Production release.
 
 ## The problem
 
